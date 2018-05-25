@@ -10,4 +10,4 @@ In the same directory there is an example var file.
 
 #TODO
 
-Add ubuntu version and add vagrant box creation
+Add virtualbox version and add vagrant box creation
