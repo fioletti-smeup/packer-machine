@@ -60,6 +60,12 @@
         "../../common/scripts/vmware-stuff.sh",
         "../../common/scripts/packer.sh"
       ]
+    },
+    {
+      "type": "shell",
+      "scripts": [
+        "../../common/scripts/code-extensions.sh"
+      ]
     }
   ],
   "post-processors": [
