@@ -53,11 +53,6 @@
       "destination": "/tmp/"
     },
     {
-      "type": "file",
-      "source": "../../common/packer_1.2.3_linux_amd64.zip",
-      "destination": "/tmp/"
-    },
-    {
       "type": "shell",
       "execute_command": "echo '{{user `ssh_password`}}' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
       "scripts": [
