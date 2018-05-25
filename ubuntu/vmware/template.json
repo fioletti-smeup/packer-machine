@@ -1,0 +1,78 @@
+{
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "boot_command": [
+        "<tab>",
+        "url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg ",
+        "auto=true ",
+        "net.ifnames=0 ",
+        "hostname=localhost ",
+        "<enter>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 262144,
+      "guest_os_type": "ubuntu-64",
+      "headless": "{{user `non_gui`}}",
+      "http_directory": "../common/http",
+      "iso_url": "{{user `iso_file`}}",
+      "iso_checksum_type": "sha256",
+      "iso_checksum": "bed8a55ae2a657f8349fe3271097cff3a5b8c3d1048cf258568f1601976fa30d",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "{{user `ssh_password`}}",
+      "ssh_wait_timeout": "40m",
+      "shutdown_command": "echo 'smeup'| sudo -S shutdown -P now",
+      "vm_name": "{{user `vm_name`}}",
+      "vmx_data": {
+        "memsize": "8192",
+        "numvcpus": "2",
+        "vhv.enable": "TRUE",
+        "vpmc.enable": "TRUE"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "../../common/vmware-stuff/VMware-Player-14.1.1-7528167.x86_64.bundle",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "file",
+      "source": "../../common/vmware-stuff/VMware-VIX-1.17.0-6661328.x86_64.bundle",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "file",
+      "source": "../../common/vmware-stuff/VMware-ovftool-4.3.0-7948156-lin.x86_64.bundle",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "file",
+      "source": "../../common/scripts/netmap.conf",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "file",
+      "source": "../../common/packer_1.2.3_linux_amd64.zip",
+      "destination": "/tmp/"
+    },
+    {
+      "type": "shell",
+      "execute_command": "echo '{{user `ssh_password`}}' | sudo -S sh -c '{{ .Vars }} {{ .Path }}'",
+      "scripts": [
+        "../common/scripts/packages.sh",
+        "../../common/scripts/vmware-stuff.sh",
+        "../../common/scripts/packer.sh"
+      ]
+    }
+  ],
+  "post-processors": [
+    {
+      "inline": [
+        "/usr/lib/vmware-ovftool/ovftool --shaAlgorithm=SHA1 output-vmware-iso/{{user `vm_name`}}.vmx {{user `vm_name`}}.ova"
+      ],
+      "type": "shell-local"
+    }
+  ]
+}
