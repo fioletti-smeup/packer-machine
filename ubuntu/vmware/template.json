@@ -71,6 +71,7 @@
   "post-processors": [
     {
       "inline": [
+        "rm -f {{user `vm_name`}}.ova",
         "/usr/lib/vmware-ovftool/ovftool --shaAlgorithm=SHA1 output-vmware-iso/{{user `vm_name`}}.vmx {{user `vm_name`}}.ova"
       ],
       "type": "shell-local"
